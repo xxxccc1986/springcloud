@@ -1,0 +1,42 @@
+server:
+  port: 3344
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://test.dzsc.tk:7007/eureka/
+
+spring:
+  application:
+    name: cloud-config-center
+  cloud:
+    config:
+      server:
+        #gitee上面的git仓库
+        git:
+          uri: https://github.com/xxxccc1986/springcloud-config #Github上的仓库地址
+            #由于设置的仓库为私有仓库，因此必须设置username和password
+#          username: xxxccc1986 #github账户
+#          password: a1483501858 #github密码
+          search-paths:
+            - springcloud-config
+          skip-ssl-validation: true
+
+      #哪个分支 如master dev pro
+      label: main
+  #配置rabbitmq的配置
+  rabbitmq:
+    host: 192.168.231.134
+    port: 5672
+    username: admin
+    password: admin
+
+#rabbitmq相关配置，暴露bus刷新配置的端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "bus-refresh"
+

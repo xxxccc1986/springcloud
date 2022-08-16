@@ -1,0 +1,40 @@
+server:
+  port: 8801
+
+spring:
+  application:
+    name: cloud-steam-provider
+  cloud:
+    stream:
+      binders:  #配置要绑定的rabbitmq的服务器，可以配置多个binder，也就是可以配置连接多个MQ服务器
+        rabbit1:  #定义用于binding整合的名称，可随便写，只需要保证与下方binder一致即可
+          type: rabbit #消息中间件的类型
+          environment: #设置rabbitmq的相关环境配置
+            spring:
+              rabbitmq:
+                host: 192.168.231.134
+                port: 5672
+                username: admin
+                password: admin
+      bindings:  #服务的整合处理
+       # 为了将消息发出去并且发送至目的地址，就需要配置相关属性。
+       #下面这些配置简单来说就是将消息发送到在rabbit1设置中的studyExchange交换机，用名为output的通道将消息发送出去
+        output: #用于将消息发送出去的通道名称,这是cloud-steam的默认输出通道名
+          destination: studyExchange # 消息将要被发送到的的Exchange名称，在启动后rabbit会创建一个与此名字相同的topic类型交换机
+          content-type: application/json #设置消息发送类型，本次设置为json，文本则设置为"text/plain"
+          binder: rabbit1 #设置要绑定的消息服务的具体类型
+
+  #也需要设置这个才不会出现Rabbit health check failed
+  rabbitmq:
+    host: 192.168.231.134
+    port: 5672
+    username: admin
+    password: admin
+
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://test.dzsc.tk:7007/eureka/
+
+

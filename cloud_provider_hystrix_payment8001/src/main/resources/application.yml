@@ -1,0 +1,21 @@
+server:
+  port: 8001
+
+spring:
+  application:
+    name: cloud-provider-payment
+
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://test.dzsc.tk:7007/eureka/
+    fetch-registry: true
+
+#此配置是为了hystrix的dashboard服务监控而设置，与服务容错无关
+#在springCloud升级之后，ServletRegistration因为springboot默认路径不是/hystrix.stream
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

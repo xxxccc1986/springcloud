@@ -1,0 +1,39 @@
+server:
+  port: 8802
+
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultZone:  http://test.dzsc.tk:7007/eureka/
+
+spring:
+  application:
+    name: cloud-stream-consumer
+  cloud:
+    stream:
+      binders:
+        rabbit1: #定义用于binding整合的名称，可随便写，只需要保证与下方binder一致即可
+          type: rabbit #消息中间件的类型
+          environment: #设置rabbitmq的相关环境配置
+            spring:
+              rabbitmq:
+                host: 192.168.231.134
+                port: 5672
+                username: admin
+                password: admin
+      bindings: #服务的整合处理
+        # 为了接收来自生产者的消息，就需要配置相关属性。
+        #下面这些配置简单来说就是将消息从在rabbit1设置中的studyExchange交换机，用名为input的通道接收消息
+        input: #用于接收消息的通道名称,这是cloud-steam的默认输入通道名
+          destination: studyExchange # 消息将要被发送到的的Exchange名称，在启动后rabbit会创建一个与此名字相同的topic类型交换机
+          content-type: application/json #设置消息发送类型，本次设置为json，文本则设置为"text/plain"
+          binder: rabbit1 #设置要绑定的消息服务的具体类型
+#          group: group1 #设置分组的名字 这里的组名其实相当于交换机中的队列名字
+
+  #也需要设置这个才不会出现Rabbit health check failed
+  rabbitmq:
+    host: 192.168.231.134
+    port: 5672
+    username: admin
+    password: admin

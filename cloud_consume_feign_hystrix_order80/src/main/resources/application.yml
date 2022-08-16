@@ -1,0 +1,35 @@
+server:
+  port: 80
+
+spring:
+  application:
+    name: cloud-order-service
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://test.dzsc.tk:7007/eureka/
+
+#openFeign80消费端yml文件设置
+#设置feign客户端超时时间(OpenFeign默认支持ribbon)
+ribbon:
+  #指的是建立连接所用的时间，适用于网络状况正常的情况下,两端连接所用的时间
+  ReadTimeout: 10000
+  #指的是建立连接后从服务器读取到可用资源所用的时间
+  ConnectTimeout: 10000
+
+#开启feign对Hystrix的支持,默认是false,
+#开启之后可以直接在@FeignClent注解中的fallback属性指定回调的类
+feign:
+  hystrix:
+    enabled: true
+#Hystrix的单独配置,即设置默认超时时间：
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 15000

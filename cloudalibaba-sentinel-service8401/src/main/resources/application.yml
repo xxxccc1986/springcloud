@@ -1,0 +1,43 @@
+#简单阐述一下这个yml的配置意思
+#8401端口微服务将注册在8848nacos配置中心上
+#9090端口提供sentinel监控微服务的数据的展示界面访问
+#8719是http通信服务【sentinel后台监控服务】，它监控8401【微服务】的同时，
+#还与9090【sentinel前台展示服务】交互数据，将监控到的数据在dashboard上展现。
+server:
+  port: 8401
+
+spring:
+  application:
+    name: cloudalibaba-sentinel-service
+  cloud:
+    nacos:
+      discovery:
+        #Nacos服务注册中心地址
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        #配置Sentinel dashboard地址
+        dashboard: localhost:9090
+        #默认8719端口，假如被占用会自动从8719开始依次+1扫描,直至找到未被占用的端口
+        port: 8719
+      datasource:
+        ds1:
+          nacos:
+            server-addr: localhost:8848 #nacos服务中心地址
+            dataId: ${spring.application.name} #微服务的名称
+            groupId: DEFAULT_GROUP #默认分组
+            data-type: json #数据类型
+            rule-type: flow #流控规则
+      # 关闭Sentinel过滤器解决链路规则失效的问题
+      filter:
+        enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+
+
+

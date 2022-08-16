@@ -1,0 +1,23 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: nacos-payment-provider
+  cloud:
+    nacos:
+      discovery:
+#        server-addr: localhost:8848 #配置Nacos注册中心地址
+        #由于使用同个服务器设置三个端口，导致端口占用，暂时没解决，所以使用linux上的单体nacos代替
+        #应该放的nginx对外暴露的端口
+        server-addr: 192.168.231.134:8848 #配置Nacos注册中心地址
+
+#暴露所有的监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+
+

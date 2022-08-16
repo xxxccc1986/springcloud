@@ -1,0 +1,15 @@
+#集群eurekaServer配置
+server:
+  port: 7008
+
+eureka:
+  instance:
+    hostname: test.dzsc.cf #eureka服务器端的实例名称
+  client:
+    #是否在注册中心注册自己
+    register-with-eureka: false
+    #false表示自己就是注册中心，职责是维护服务实例，不需要去检索服务
+    fetch-registry: false
+    service-url:
+      #互相注册，相互守望 即a服务器注册到b服务器中，反之同样
+      defaultZone: http://test.dzsc.tk:7007/eureka/
